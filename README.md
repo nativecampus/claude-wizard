@@ -33,6 +33,27 @@ Each phase has a checkpoint. Claude won't rush ahead.
 
 The output is the same — working code. But the `/wizard` code ships without the 2am "why is this broken in production" follow-up.
 
+## Contributing
+
+This project is small, opinionated, and hungry for fresh ideas. PRs are welcome and encouraged :heart:
+
+**Ways to contribute:**
+
+- **Framework overlays** — Add a `frameworks/rails/`, `frameworks/nextjs/`, or `frameworks/rust/` directory with framework-specific Phase 2/4 additions that people can merge into their SKILL.md
+- **New patterns** — Found a bug pattern that `/wizard` should catch? Add it to PATTERNS.md
+- **Phase improvements** — Battle-tested a refinement to one of the 8 phases? Open a PR with a before/after example
+- **Bug reports** — If `/wizard` missed something it should have caught, that's a bug in the prompt. File an issue with the scenario.
+- **Translations** — Port the skill to other languages so non-English teams can use it
+
+**How to contribute:**
+
+1. Fork the repo
+2. Make your changes
+3. Open a PR with a clear description of *what changed* and *why*
+4. Bonus points if you use `/wizard` to make the PR :wink:
+
+No contribution is too small. A single-line fix to a checklist item that saved you from a bug is just as valuable as a new framework overlay.
+
 ## Install
 
 **One command** from your project root:
@@ -114,31 +135,11 @@ This skill was developed over months of production use on a fintech platform ([w
 
 The framework-specific details have been stripped to make it universal. The methodology works with any language, framework, or stack.
 
-## Contributing
-
-This project is small, opinionated, and hungry for fresh ideas. PRs are welcome and encouraged :heart:
-
-**Ways to contribute:**
-
-- **Framework overlays** — Add a `frameworks/rails/`, `frameworks/nextjs/`, or `frameworks/rust/` directory with framework-specific Phase 2/4 additions that people can merge into their SKILL.md
-- **New patterns** — Found a bug pattern that `/wizard` should catch? Add it to PATTERNS.md
-- **Phase improvements** — Battle-tested a refinement to one of the 8 phases? Open a PR with a before/after example
-- **Bug reports** — If `/wizard` missed something it should have caught, that's a bug in the prompt. File an issue with the scenario.
-- **Translations** — Port the skill to other languages so non-English teams can use it
-
-**How to contribute:**
-
-1. Fork the repo
-2. Make your changes
-3. Open a PR with a clear description of *what changed* and *why*
-4. Bonus points if you use `/wizard` to make the PR :wink:
-
-No contribution is too small. A single-line fix to a checklist item that saved you from a bug is just as valuable as a new framework overlay.
-
 ## Requirements
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
 - A git repository (the skill uses `gh` CLI for GitHub integration)
+- An automated code review bot for Phase 8 — [Bug Bot](https://docs.cursor.com/features/bug-bot) (Cursor), [CodeRabbit](https://coderabbit.ai/), or similar. Phase 8 works without one, but the quality gate cycle is where `/wizard` really shines.
 
 ## License
 
