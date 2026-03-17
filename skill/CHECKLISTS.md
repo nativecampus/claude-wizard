@@ -3,7 +3,8 @@
 ## Pre-Implementation Checklist
 
 - [ ] Read CLAUDE.md
-- [ ] Read relevant project docs
+- [ ] If CLAUDE.md references external docs: read every referenced document (all of them, no exceptions)
+- [ ] If no CLAUDE.md: scan repo root and docs/ for README, CONTRIBUTING, architecture docs, test guides
 - [ ] Assessed complexity (simple/medium/complex)
 - [ ] Created/found GitHub issue (for medium+ tasks)
 - [ ] Created todo list with phases
@@ -11,7 +12,7 @@
 - [ ] Identified patterns to follow
 - [ ] Listed files to modify
 
-## TDD Checklist
+## TDD Checklist (New Features)
 
 - [ ] Wrote failing test FIRST (RED)
 - [ ] Test fails for the right reason
@@ -20,6 +21,16 @@
 - [ ] Added boundary condition tests (0, 1, -1, null, empty)
 - [ ] Added side effect assertions
 - [ ] Isolated tests from external dependencies
+
+## TDD Checklist (Bug Fixes)
+
+- [ ] Diagnosed root cause and mapped affected code paths
+- [ ] Checked whether the same pattern exists elsewhere
+- [ ] Wrote test that reproduces the bug (RED)
+- [ ] Test fails because of the bug
+- [ ] Applied fix (GREEN)
+- [ ] Test passes
+- [ ] Wrote tests for any related instances of the same pattern
 
 ## Implementation Checklist
 
@@ -40,7 +51,7 @@
 - [ ] No security vulnerabilities
 - [ ] Tests cover new functionality
 - [ ] Appropriate test suite passes
-- [ ] Documentation updated
+- [ ] Documentation updated where behaviour changed
 - [ ] GitHub issue updated
 
 ## Adversarial Questions
