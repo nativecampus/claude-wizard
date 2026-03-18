@@ -1,8 +1,8 @@
 # claude-wizard
 
-**Turn Claude Code from a fast coder into a senior software architect.**
+**Turn Claude Code from a fast coder into a disciplined software engineer.**
 
-Claude Code is brilliant at writing code quickly. But speed without structure leads to bugs, race conditions, and regressions that eat the time you saved — and then some. `/wizard` changes the operating mode: Claude reads before writing, tests before implementing, and attacks its own code before committing.
+Claude Code is brilliant at writing code quickly. But speed without structure leads to bugs, race conditions, and regressions that eat the time you saved — and then some. `/wizard` changes the operating mode: Claude reads before writing, tests before implementing, refactors before moving on, and verifies adversarial test coverage before committing.
 
 ## The ingredients
 
@@ -14,13 +14,15 @@ Claude Code is brilliant at writing code quickly. But speed without structure le
 
 3. **Codebase-first exploration** — Before writing a single line, `/wizard` reads the existing code, greps for methods and relationships, and verifies assumptions. No hallucinated function calls. No invented APIs.
 
-4. **TDD, no exceptions** — Failing tests first, then minimal implementation, then verify. Every time. The tests use a mutation-testing mindset — they assert specific values that would break if the code changed, not just `assertTrue(worked)`.
+4. **Strict Red-Green-Refactor TDD** — Failing test first, then minimal implementation, then refactor before moving on. Every cycle. Adversarial cases (null, concurrent, boundary) are written as test cases during the RED phase, not reflected on at commit time. The tests use a mutation-testing mindset — they assert specific values that would break if the code changed, not just `assertTrue(worked)`.
 
 5. **Feature branch to main** — Clean branch, focused PR, one concern at a time. No stacked branches, no tangled dependencies.
 
-6. **Bug Bot cycle** — After opening the PR, `/wizard` monitors your automated code review bot (Bug Bot, CodeRabbit, etc.), reads every finding, fixes valid issues, replies to false positives, and repeats until the status is clean. No unresolved findings, ever.
+6. **Design heuristics** — Concrete constraints applied during every refactor step: methods under 5–8 lines, classes under 100 lines, one level of abstraction per function, no more than 4 parameters, dependencies pointing inward toward business logic, interfaces designed from the caller's perspective.
 
-7. **CI (your setup)** — Your test suite, your pipeline, your rules. `/wizard` runs affected tests locally before pushing, but the full CI suite depends on your project. I use GitHub Actions — GitHub for everything.
+7. **Bug Bot cycle** — After opening the PR, `/wizard` monitors your automated code review bot (Bug Bot, CodeRabbit, etc.), reads every finding, fixes valid issues, replies to false positives, and repeats until the status is clean. No unresolved findings, ever.
+
+8. **CI (your setup)** — Your test suite, your pipeline, your rules. `/wizard` runs the full test suite locally before every commit — no tiered strategy, no scoping down to save time. The full CI suite depends on your project.
 
 Each phase has a checkpoint. Claude won't rush ahead.
 
@@ -36,7 +38,7 @@ Each phase has a checkpoint. Claude won't rush ahead.
 >
 > You: `/wizard implement #164 — transfer status tracking`
 >
-> Claude: *reads the codebase, writes failing tests, implements with locking to prevent concurrent conflicts, runs the test suite, self-reviews for edge cases, opens a PR, resolves all bot findings, checks off acceptance criteria*
+> Claude: *reads the codebase, writes a failing test, implements the minimum to pass it, refactors before moving on, repeats for each behaviour, runs the full test suite, verifies adversarial test coverage, opens a PR, resolves all bot findings, checks off acceptance criteria*
 
 The output is the same — working code. But the `/wizard` code ships without the 2am "why is this broken in production" follow-up.
 
@@ -48,7 +50,7 @@ This project is small, opinionated, and hungry for fresh ideas. PRs are welcome 
 
 - **Framework overlays** — Add a `frameworks/rails/`, `frameworks/nextjs/`, or `frameworks/rust/` directory with framework-specific Phase 2/4 additions that people can merge into their SKILL.md
 - **New patterns** — Found a bug pattern that `/wizard` should catch? Add it to PATTERNS.md
-- **Phase improvements** — Battle-tested a refinement to one of the 8 phases? Open a PR with a before/after example
+- **Phase improvements** — Battle-tested a refinement to one of the 7 phases? Open a PR with a before/after example
 - **Bug reports** — If `/wizard` missed something it should have caught, that's a bug in the prompt. File an issue with the scenario.
 - **Translations** — Port the skill to other languages so non-English teams can use it
 
@@ -66,16 +68,16 @@ No contribution is too small. A single-line fix to a checklist item that saved y
 **One command** from your project root:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/vlad-ko/claude-wizard/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/nativecampus/claude-wizard/main/install.sh | bash
 ```
 
 Or manually:
 
 ```bash
 mkdir -p .claude/skills/wizard
-curl -sL https://raw.githubusercontent.com/vlad-ko/claude-wizard/main/skill/SKILL.md -o .claude/skills/wizard/SKILL.md
-curl -sL https://raw.githubusercontent.com/vlad-ko/claude-wizard/main/skill/CHECKLISTS.md -o .claude/skills/wizard/CHECKLISTS.md
-curl -sL https://raw.githubusercontent.com/vlad-ko/claude-wizard/main/skill/PATTERNS.md -o .claude/skills/wizard/PATTERNS.md
+curl -sL https://raw.githubusercontent.com/nativecampus/claude-wizard/main/skill/SKILL.md -o .claude/skills/wizard/SKILL.md
+curl -sL https://raw.githubusercontent.com/nativecampus/claude-wizard/main/skill/CHECKLISTS.md -o .claude/skills/wizard/CHECKLISTS.md
+curl -sL https://raw.githubusercontent.com/nativecampus/claude-wizard/main/skill/PATTERNS.md -o .claude/skills/wizard/PATTERNS.md
 ```
 
 ## Usage
@@ -91,7 +93,7 @@ Claude will respond with `## [WIZARD MODE]` and begin the phased approach. You'l
 ```
 ## [WIZARD MODE] Phase 1: Understanding & Planning
 ...
-## [WIZARD MODE] Phase 3: Test-Driven Development
+## [WIZARD MODE] Phase 3: Implementation (Test-Driven)
 ...
 ```
 
@@ -105,19 +107,19 @@ You can also invoke it mid-conversation:
 
 | File | Purpose |
 |------|---------|
-| `SKILL.md` | The core skill — 8-phase development methodology |
+| `SKILL.md` | The core skill — 7-phase development methodology with Red-Green-Refactor TDD and design heuristics |
 | `CHECKLISTS.md` | Quick-reference checklists for each phase |
-| `PATTERNS.md` | Common patterns and anti-patterns with examples |
+| `PATTERNS.md` | Common patterns and anti-patterns with examples (favours duplication over the wrong abstraction) |
 
 ## Customization
 
 The skill is designed to be extended. Add your project-specific patterns:
 
-**Framework conventions** — Add your framework's testing commands, directory structure, and coding standards to Phase 2 and Phase 4.
+**Framework conventions** — Add your framework's testing commands, directory structure, and coding standards to Phase 2 and Phase 3.
 
 **Logging patterns** — Replace the generic logging guidance with your project's specific logging approach.
 
-**CI/CD integration** — Customize Phase 8 with your specific CI bot names and quality gate requirements.
+**CI/CD integration** — Customize Phase 7 with your specific CI bot names and quality gate requirements.
 
 **Team conventions** — Add commit message formats, PR templates, and review processes.
 
@@ -132,13 +134,12 @@ Claude Code [skills](https://docs.anthropic.com/en/docs/claude-code/skills) are 
 1. **Read `CLAUDE.md`** and project docs — understand the rules before touching anything
 2. **Find or create a GitHub issue** — define what "done" looks like with acceptance criteria
 3. **Explore the codebase** — grep, search, verify. Never assume a method or relationship exists
-4. **Write failing tests** — TDD with mutation-resistant assertions
-5. **Implement the minimum** — make tests pass, follow existing patterns, no gold-plating
-6. **Run the test suite** — fix regressions before moving on
-7. **Adversarial self-review** — attack your own code for race conditions, null edges, security holes
-8. **Open a PR, run the Bug Bot cycle** — monitor findings, fix or reply, repeat until clean
+4. **Implement via Red-Green-Refactor** — write a failing test, implement the minimum, refactor before moving on, repeat for each behaviour. Adversarial cases are test cases, not afterthoughts
+5. **Run the full test suite** — every time, no exceptions. Fix regressions before moving on
+6. **Update documentation** — keep docs and GitHub issues in sync with code
+7. **Pre-commit review with adversarial test coverage** — verify tests exist for concurrent execution, boundary inputs, race conditions, and partial failures. Then open a PR and run the Bug Bot cycle until clean
 
-There's no magic. It's a well-structured prompt that encodes the habits of senior engineers into a repeatable process. The key insight is that Claude doesn't lack the *ability* to do these things — it lacks the *process* to do them consistently. `/wizard` is that process.
+There's no magic. It's a well-structured prompt that encodes disciplined development habits into a repeatable process. The methodology draws on ideas from Sandi Metz (small objects, clear interfaces, duplication over the wrong abstraction), Robert C. Martin (Red-Green-Refactor TDD, single responsibility, clean code heuristics), and Martin Fowler (refactoring as a continuous practice, not a separate phase). The key insight is that Claude doesn't lack the *ability* to do these things — it lacks the *process* to do them consistently. `/wizard` is that process.
 
 ## Origin
 
@@ -150,7 +151,7 @@ The framework-specific details have been stripped to make it universal. The meth
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
 - A git repository (the skill uses `gh` CLI for GitHub integration)
-- An automated code review bot for Phase 8 — [Bug Bot](https://docs.cursor.com/features/bug-bot) (Cursor), [CodeRabbit](https://coderabbit.ai/), or similar. Phase 8 works without one, but the quality gate cycle is where `/wizard` really shines.
+- An automated code review bot for Phase 7 — [Bug Bot](https://docs.cursor.com/features/bug-bot) (Cursor), [CodeRabbit](https://coderabbit.ai/), or similar. Phase 7 works without one, but the quality gate cycle is where `/wizard` really shines.
 
 ## License
 

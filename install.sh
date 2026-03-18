@@ -5,7 +5,7 @@ set -e
 # Installs the wizard skill into your project's .claude/skills/ directory
 
 SKILL_DIR=".claude/skills/wizard"
-REPO_URL="https://raw.githubusercontent.com/vlad-ko/claude-wizard/main/skill"
+REPO_URL="https://raw.githubusercontent.com/nativecampus/claude-wizard/main/skill"
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
